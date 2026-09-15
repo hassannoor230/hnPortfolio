@@ -33,28 +33,20 @@ export default function Navbar() {
   }
 
   return (
-    <nav style={bgStyle} className="navbar-transition">
-      <div className="container flex-between" style={{ height: '4rem' }}>
-        <Link to="/" className="text-primary display-strong" style={{ fontSize: '1.5rem', fontWeight: 300 }}>
+    <nav className="navbar" style={bgStyle}>
+      <div className="container navbar-inner" style={{ height: '4rem' }}>
+        <Link to="/" className="nav-logo display-strong" style={{ fontSize: '1.5rem' }}>
           HN
         </Link>
 
-        <div className="flex-gap gap-3" style={{ display: 'none' }}>
-          {links.map(link => (
-            <Link key={link.to} to={link.to} className="label text-dim hover:text-accent">
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
         <div className="navbar-desktop">
-          <div className="flex-gap gap-3">
+          <div className="flex-gap" style={{ gap: '2rem' }}>
             {links.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
-                className="label text-dim hover:text-accent"
-                style={{ lineHeight: 1 }}
+                className="nav-link label"
+                style={{ color: 'var(--text-dim)', lineHeight: 1 }}
               >
                 {link.label}
               </Link>
@@ -83,7 +75,7 @@ export default function Navbar() {
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="navbar-mobile"
           >
-            <div className="container flex-center" style={{ height: '100%', flexDirection: 'column', gap: '2rem' }}>
+            <div className="navbar-mobile-inner">
               {links.map((link, i) => (
                 <motion.div
                   key={link.to}
@@ -93,8 +85,7 @@ export default function Navbar() {
                 >
                   <Link
                     to={link.to}
-                    className="display-strong text-primary hover:text-accent"
-                    style={{ fontSize: '2.5rem', fontWeight: 300, lineHeight: 1.1 }}
+                    className="nav-mobile-link display-strong"
                   >
                     {link.label}
                   </Link>
@@ -104,16 +95,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <style jsx>{`
-        .navbar-desktop { display: flex; align-items: center; gap: 2rem; }
-        .navbar-mobile-btn { display: none; background: none; border: none; color: var(--text); }
-        @media (max-width: 768px) {
-          .navbar-desktop { display: none; }
-          .navbar-mobile-btn { display: block; }
-        }
-        .navbar-transition { transition: all 0.3s ease; }
-      `}</style>
     </nav>
   )
 }
