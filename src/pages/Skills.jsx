@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Container, SectionLabel, SectionTitle, GoldLine, Tag, EmptyState } from '../UI'
-import api from '../../lib/api'
-import SEO from '../SEO'
+import { Container, SectionLabel, SectionTitle, GoldLine, Tag, EmptyState } from '../components/UI'
+import api from '../lib/api'
+import SEO from '../components/SEO'
 
 function FadeIn({ children, delay = 0, y = 30 }) {
   const ref = useRef(null)

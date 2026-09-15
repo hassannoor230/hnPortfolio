@@ -8,7 +8,7 @@ const StatCard = ({ title, value, icon, trend }) => (
   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ padding: '24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
       {icon}
-      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>{title}</span>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>{title}</span>
     </div>
     <div style={{ fontFamily: 'var(--font-body)', fontSize: '28px', fontWeight: 700, color: 'var(--text)' }}>{value}</div>
     {trend && <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--gold)', marginTop: '8px' }}>{trend}</div>}
@@ -56,3 +56,4 @@ export default function AnalyticsAdmin() {
     </motion.div>
   )
 }
+

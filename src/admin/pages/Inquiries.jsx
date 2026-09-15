@@ -25,11 +25,11 @@ export default function InquiriesAdmin() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>Name</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>Email</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>Subject</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>Date</th>
-                <th style={{ textAlign: 'right', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--text-dim)' }}>Actions</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Name</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Email</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Subject</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Date</th>
+                <th style={{ textAlign: 'right', padding: '12px 16px', fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -62,18 +62,18 @@ export default function InquiriesAdmin() {
                 <button onClick={closeModal} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer' }} data-cursor="Close"><X size={20} /></button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div><label style={{ fontSize: '10px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Name</label>
+                <div><label style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Name</label>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text)' }}>{item.name}</p></div>
-                <div><label style={{ fontSize: '10px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Email</label>
+                <div><label style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Email</label>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-dim)' }}>{item.email}</p></div>
-                <div><label style={{ fontSize: '10px', letter-spacing: '2px', text-transform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Subject</label>
+                <div><label style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Subject</label>
                   <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-dim)' }}>{item.subject || 'N/A'}</p></div>
-                <div><label style={{ fontSize: '10px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Message</label>
+                <div><label style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Message</label>
                   <div style={{ padding: '16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
                     <p style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text)', whiteSpace: 'pre-wrap', margin: 0 }}>{item.message}</p>
                   </div></div>
                 <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
-                  <a href={`mailto:${item.email}?subject=${encodeURIComponent(item.subject || '')}`} style={{ padding: '10px 20px', background: 'var(--gold)', border: 'none', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '12px', letterSpacing: '1px', text-decoration: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }} data-cursor="Reply"><ExternalLink size={14} /> Reply</a>
+                  <a href={`mailto:${item.email}?subject=${encodeURIComponent(item.subject || '')}`} style={{ padding: '10px 20px', background: 'var(--gold)', border: 'none', color: 'var(--bg)', fontFamily: 'var(--font-body)', fontSize: '12px', letterSpacing: '1px', textDecoration: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }} data-cursor="Reply"><ExternalLink size={14} /> Reply</a>
                   <button onClick={closeModal} style={{ padding: '10px 20px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-dim)', fontFamily: 'var(--font-body)', fontSize: '12px', cursor: 'pointer' }} data-cursor="Close">Close</button>
                 </div>
               </div>
@@ -84,3 +84,5 @@ export default function InquiriesAdmin() {
     </>
   )
 }
+
+

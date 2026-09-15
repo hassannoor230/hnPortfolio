@@ -59,7 +59,7 @@ export default function Testimonials() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                         <span style={{ fontFamily: 'var(--font-body)', fontSize: '13px', fontWeight: 500, color: 'var(--text)' }}>{t.clientName}</span>
                         {t.position && <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-muted)' }}>— {t.position}</span>}
-                        {t.company && <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-muted)' }}| {t.company}</span>}
+                        {t.company && <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-muted)' }}>— {t.company}</span>}
                         {t.rating && (
                           <div style={{ display: 'flex', gap: '2px', marginLeft: 'auto' }}>
                             {Array.from({ length: 5 }).map((_, idx) => (

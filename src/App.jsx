@@ -1,134 +1,49 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import CustomCursor from './components/CustomCursor'
+import PageLoader from './components/Loader'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import About from './components/About'
-import Works from './components/Works'
-import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Home from './pages/Home'
+import About from './pages/About'
+import Works from './pages/Works'
+import Project from './pages/Project'
+import Skills from './pages/Skills'
+import Experience from './pages/Experience'
+import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
+import Testimonials from './pages/Testimonials'
+import Contact from './pages/Contact'
+import Resume from './pages/Resume'
+import AdminApp from './admin/App'
 
-function CustomCursor() {
-  const cursorX = useMotionValue(-100)
-  const cursorY = useMotionValue(-100)
-  const followerX = useSpring(cursorX, { damping: 25, stiffness: 220 })
-  const followerY = useSpring(cursorY, { damping: 25, stiffness: 220 })
-
-  useEffect(() => {
-    const move = (e) => {
-      cursorX.set(e.clientX - 6)
-      cursorY.set(e.clientY - 6)
-    }
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
-  }, [])
-
+function MainLayout({ children }) {
   return (
     <>
-      <motion.div
-        style={{
-          position: 'fixed',
-          left: 0, top: 0,
-          width: 12, height: 12,
-          background: 'var(--gold)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 99999,
-          mixBlendMode: 'difference',
-          x: cursorX,
-          y: cursorY,
-        }}
-      />
-      <motion.div
-        style={{
-          position: 'fixed',
-          left: -12, top: -12,
-          width: 36, height: 36,
-          border: '1px solid rgba(201,168,76,0.5)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 99998,
-          x: followerX,
-          y: followerY,
-        }}
-      />
+      <CustomCursor />
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
     </>
-  )
-}
-
-function PageLoader() {
-  return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6, delay: 1.8 }}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'var(--bg)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 99999,
-        flexDirection: 'column',
-        gap: '24px',
-      }}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '64px',
-          fontWeight: 600,
-          color: 'var(--gold)',
-          letterSpacing: '-2px',
-          lineHeight: 1,
-        }}
-      >
-        HN
-      </motion.div>
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: '200px' }}
-        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-        style={{
-          height: '1px',
-          background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
-        }}
-      />
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ delay: 0.6 }}
-        style={{
-          fontFamily: 'var(--font-body)',
-          fontSize: '11px',
-          letterSpacing: '4px',
-          textTransform: 'uppercase',
-          color: 'var(--text-dim)',
-        }}
-      >
-        Loading...
-      </motion.p>
-    </motion.div>
   )
 }
 
 export default function App() {
   const [loading, setLoading] = useState(true)
+  const location = useLocation()
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 2400)
     return () => clearTimeout(t)
   }, [])
 
+  const isAdmin = location.pathname.startsWith('/admin')
+
   return (
     <>
-      <CustomCursor />
       <AnimatePresence>
-        {loading && <PageLoader key="loader" />}
+        {loading && !isAdmin && <PageLoader key="loader" />}
       </AnimatePresence>
 
       <motion.div
@@ -136,14 +51,20 @@ export default function App() {
         animate={{ opacity: loading ? 0 : 1 }}
         transition={{ duration: 0.8 }}
       >
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Works />
-          <Contact />
-        </main>
-        <Footer />
+        <Routes>
+          <Route path="/admin/*" element={<AdminApp />} />
+          <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+          <Route path="/about" element={<MainLayout><About /></MainLayout>} />
+          <Route path="/works" element={<MainLayout><Works /></MainLayout>} />
+          <Route path="/projects/:slug" element={<MainLayout><Project /></MainLayout>} />
+          <Route path="/skills" element={<MainLayout><Skills /></MainLayout>} />
+          <Route path="/experience" element={<MainLayout><Experience /></MainLayout>} />
+          <Route path="/blog" element={<MainLayout><Blog /></MainLayout>} />
+          <Route path="/blog/:slug" element={<MainLayout><BlogPost /></MainLayout>} />
+          <Route path="/testimonials" element={<MainLayout><Testimonials /></MainLayout>} />
+          <Route path="/contact" element={<MainLayout><Contact /></MainLayout>} />
+          <Route path="/resume" element={<MainLayout><Resume /></MainLayout>} />
+        </Routes>
       </motion.div>
     </>
   )

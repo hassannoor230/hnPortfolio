@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePres
 import { Link } from 'react-router-dom'
 import { useSettings } from '../contexts/SettingsContext'
 import { useScrollReveal } from '../hooks/scroll'
-import { MagneticButton, StatNumber, GoldLine, SectionLabel } from './UI'
+import { MagneticButton, StatNumber, GoldLine, SectionLabel } from '../components/UI'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import api from '../lib/api'
 

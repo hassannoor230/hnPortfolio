@@ -167,7 +167,7 @@ margin-right:10px;
 font-size:12px;
 letter-spacing:4px;
 color:gold;
-text-transform:uppercase;
+textTransform:uppercase;
 }
 
 .title{

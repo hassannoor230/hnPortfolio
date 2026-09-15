@@ -89,8 +89,9 @@ export default function Works() {
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
                       {(project.technologies || []).slice(0, 4).map((t) => <Tag key={t}>{t}</Tag>)}
                     </div>
-                  </div>
+                  </Link>
                 </div>
+              </div>
 
                 <div style={{ textAlign: 'right', flexShrink: 0 }}>
                   <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-dim)', marginBottom: '6px' }}>{project.year || '—'}</div>

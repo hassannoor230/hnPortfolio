@@ -88,7 +88,7 @@ export default function Project() {
                 </div>
               )}
               {project.projectType && (
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}><strong style={{ color: 'var(--text)' }}>Type:</strong> {project.projectType}</span></div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--text-dim)', marginBottom: '16px' }}><strong style={{ color: 'var(--text)' }}>Type:</strong> {project.projectType}</div>
               )}
             </FadeIn>
           </div>

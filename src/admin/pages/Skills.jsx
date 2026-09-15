@@ -98,7 +98,7 @@ export default function SkillsAdmin() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: '10px', letterSpacing: '2px', text-transform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Level (%)</label>
+                  <label style={{ fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '8px', fontFamily: 'var(--font-body)', display: 'block' }}>Level (%)</label>
                   <input type="number" name="level" value={form.level || 80} onChange={handleChange} min="0" max="100" style={{ width: '100%', padding: '12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: '13px', outline: 'none' }} />
                 </div>
                 <div>
@@ -129,4 +129,5 @@ export default function SkillsAdmin() {
     </>
   )
 }
+
 
