@@ -1,7 +1,9 @@
-import { useEffect, useState, Suspense, lazy } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import CustomCursor from './components/CustomCursor'
+import AmbientBackground from './components/AmbientBackground'
 import Home from './pages/Home'
 import Works from './pages/Works'
 import Project from './pages/Project'
@@ -24,32 +26,35 @@ const NotFound = () => (
 
 function AppContent() {
   const location = useLocation()
-  const isAdmin = location.pathname.startsWith('/admin')
 
   return (
-    <Routes>
-      <Route path="/admin/*" element={<AdminApp />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/works" element={<Works />} />
-      <Route path="/projects/:slug" element={<Project />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/skills" element={<Skills />} />
-      <Route path="/experience" element={<Experience />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path="/testimonials" element={<Testimonials />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/resume" element={<Resume />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/works" element={<Works />} />
+        <Route path="/projects/:slug" element={<Project />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/skills" element={<Skills />} />
+        <Route path="/experience" element={<Experience />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/resume" element={<Resume />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
   )
 }
 
 export default function App() {
   return (
     <>
+      <AmbientBackground />
+      <CustomCursor />
       <Navbar />
-      <main>
+      <main className="site-shell">
         <AppContent />
       </main>
       <Footer />
