@@ -558,6 +558,12 @@ section {
   gap: 26px;
 }
 
+.section-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 42px;
+}
+
 .project-panel {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
@@ -576,7 +582,8 @@ section {
 }
 
 .project-media {
-  min-height: 290px;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
   background: rgba(255, 255, 255, 0.02);
   overflow: hidden;
 }
@@ -713,17 +720,41 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 32px 28px;
-  background: linear-gradient(135deg, rgba(201, 168, 106, 0.08), rgba(255, 255, 255, 0.02));
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+  gap: 36px;
+  padding: 34px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
 
 .cta-box h2 {
-  max-width: 560px;
-  font-size: clamp(2rem, 3vw, 3.2rem);
-  line-height: 1.05;
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.cta-copy p {
+  color: var(--text-soft);
+  font-size: 1rem;
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  color: var(--cream-50);
+  border: 1px solid rgba(201, 168, 106, 0.55);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.cta-button:hover {
+  background: rgba(201, 168, 106, 0.12);
+  border-color: var(--gold-300);
+  transform: translateY(-2px);
 }
 
 .cta-actions {
@@ -980,6 +1011,56 @@ section {
   min-height: 100%;
 }
 
+.contact-form {
+  display: grid;
+  gap: 18px;
+}
+
+.contact-form > .grid {
+  margin-bottom: 0;
+}
+
+.contact-input {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(4, 10, 24, 0.7);
+  color: var(--cream-50);
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.contact-input::placeholder {
+  color: var(--text-soft);
+  opacity: 0.8;
+}
+
+.contact-input:focus {
+  border-color: rgba(201, 168, 106, 0.72);
+  background: rgba(10, 17, 40, 0.9);
+  box-shadow: 0 0 0 3px rgba(201, 168, 106, 0.08);
+}
+
+.contact-input:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.contact-form textarea.contact-input {
+  min-height: 150px;
+}
+
+.contact-form .btn {
+  justify-self: start;
+  margin-top: 4px;
+}
+
 .site-footer {
   border-top: 1px solid var(--line);
   background: rgba(5, 11, 21, 0.9);
@@ -1063,6 +1144,7 @@ section {
   .hero-layout,
   .two-up,
   .project-panel,
+  .contact-grid,
   .process-grid,
   .testimonial-grid,
   .cta-box {
@@ -1085,6 +1167,10 @@ section {
 
   .cta-box {
     display: grid;
+  }
+
+  .contact-form-panel {
+    min-height: auto;
   }
 }
 
@@ -1117,6 +1203,16 @@ section {
   .section-heading-block h2,
   .cta-box h2 {
     font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .cta-box {
+    align-items: start;
+    gap: 24px;
+  }
+
+  .contact-form > .grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
   }
 
   .project-panel {

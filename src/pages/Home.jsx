@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Quote, ChevronRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Quote, ChevronRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import api from '../lib/api'
@@ -271,6 +271,13 @@ export default function Home() {
               ))
             )}
           </div>
+
+          <div className="section-action">
+            <Link to="/works" className="btn btn--secondary">
+              More Projects
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -321,18 +328,16 @@ export default function Home() {
 
       <section className="reveal-section cta-section">
         <div className="container cta-box">
-          <div>
-            <span className="section-tag">Let&apos;s build</span>
-            <h2>Need a premium digital presence that actually converts?</h2>
+          <div className="cta-copy">
+            <h2>Let&apos;s Discuss a Project</h2>
+            <p>Have a project in mind? Let&apos;s build something meaningful.</p>
           </div>
 
           <div className="cta-actions">
-            <Link to="/contact" className="btn btn--primary" data-cursor="Start a project">
-              Start a Project
+            <Link to="/contact" className="cta-button" data-cursor="Get in touch">
+              Get In Touch
+              <ArrowUpRight size={17} />
             </Link>
-            <a href="https://github.com/hassannoor230" target="_blank" rel="noreferrer" className="btn btn--secondary" data-cursor="GitHub">
-              GitHub
-            </a>
           </div>
         </div>
       </section>
