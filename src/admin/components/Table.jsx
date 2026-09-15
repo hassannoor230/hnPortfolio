@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { LoadingSpinner, EmptyState } from '../components/UI'
+import { LoadingSpinner, EmptyState } from '../../components/UI'
 import { Search, ChevronLeft, ChevronRight, Trash2, Edit, Plus } from 'lucide-react'
 
 export function AdminToolbar({

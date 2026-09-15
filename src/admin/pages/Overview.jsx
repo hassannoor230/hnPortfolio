@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import api from '../api'
-import { LoadingSpinner, GoldLine, SectionLabel } from '../components/UI'
+import { LoadingSpinner, GoldLine, SectionLabel } from '../../components/UI'
 import {
   FolderOpen, Award, Users, BookOpen, MailCheck, FileText, TrendingUp, Eye
 } from 'lucide-react'
