@@ -16,12 +16,14 @@ export default function CustomCursor() {
     const move = (e) => {
       cursorX.set(e.clientX - 5)
       cursorY.set(e.clientY - 5)
+
       if (!visible.current) {
         visible.current = true
-        dotRef.current.style.opacity = '1'
-        followerRef.current.style.opacity = '1'
+        if (dotRef.current) dotRef.current.style.opacity = '1'
+        if (followerRef.current) followerRef.current.style.opacity = '1'
       }
     }
+
     const over = (e) => {
       const el = e.currentTarget
       const text = el.dataset.cursor
@@ -32,33 +34,59 @@ export default function CustomCursor() {
         label.current = ''
         if (labelRef.current) labelRef.current.textContent = ''
       }
-      dotRef.current.style.transform = 'scale(2.4)'
-      dotRef.current.style.background = 'var(--bg)'
-      followerRef.current.style.width = '64px'
-      followerRef.current.style.height = '64px'
-      followerRef.current.style.borderColor = 'var(--gold)'
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = 'scale(2.4)'
+        dotRef.current.style.background = 'var(--bg)'
+      }
+
+      if (followerRef.current) {
+        followerRef.current.style.width = '64px'
+        followerRef.current.style.height = '64px'
+        followerRef.current.style.borderColor = 'var(--gold)'
+      }
     }
+
     const leave = () => {
       label.current = ''
       if (labelRef.current) labelRef.current.textContent = ''
-      dotRef.current.style.transform = 'scale(1)'
-      dotRef.current.style.background = 'var(--gold)'
-      followerRef.current.style.width = '32px'
-      followerRef.current.style.height = '32px'
-      followerRef.current.style.borderColor = 'rgba(201,169,110,0.5)'
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = 'scale(1)'
+        dotRef.current.style.background = 'var(--gold)'
+      }
+
+      if (followerRef.current) {
+        followerRef.current.style.width = '32px'
+        followerRef.current.style.height = '32px'
+        followerRef.current.style.borderColor = 'rgba(201,169,110,0.5)'
+      }
     }
-    const down = () => { if (dotRef.current) dotRef.current.style.transform = 'scale(1.4)' }
-    const up = () => { if (dotRef.current) dotRef.current.style.transform = 'scale(1)' }
+
+    const down = () => {
+      if (dotRef.current) dotRef.current.style.transform = 'scale(1.4)'
+    }
+
+    const up = () => {
+      if (dotRef.current) dotRef.current.style.transform = 'scale(1)'
+    }
 
     window.addEventListener('mousemove', move)
-    document.querySelectorAll('a, button, [data-cursor]').forEach(el => {
+    document.querySelectorAll('a, button, [data-cursor]').forEach((el) => {
       el.addEventListener('mouseenter', over)
       el.addEventListener('mouseleave', leave)
       el.addEventListener('mousedown', down)
       el.addEventListener('mouseup', up)
     })
+
     return () => {
       window.removeEventListener('mousemove', move)
+      document.querySelectorAll('a, button, [data-cursor]').forEach((el) => {
+        el.removeEventListener('mouseenter', over)
+        el.removeEventListener('mouseleave', leave)
+        el.removeEventListener('mousedown', down)
+        el.removeEventListener('mouseup', up)
+      })
     }
   }, [])
 
