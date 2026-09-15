@@ -43,8 +43,8 @@ export default function Footer() {
               {navLinks.map((link) => (
                 <li key={link.to}>
                   <Link to={link.to} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '14px', transition: 'color 0.2s', display: 'inline-block' }}
-                    onMouseEnter={e => e.target.style.color = 'var(--gold)'}
-                    onMouseLeave={e => e.target.style.color = 'var(--text-dim)'}
+                    onMouseEnter={e => (e.target.style.color = 'var(--gold)')}
+                    onMouseLeave={e => (e.target.style.color = 'var(--text-dim)')}
                   >{link.label}</Link>
                 </li>
               ))}
@@ -56,7 +56,7 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {settings?.email && (
                 <li><a href={`mailto:${settings.email}`} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '14px', transition: 'color 0.2s' }}
-                  onMouseEnter={e => e.target.style.color = 'var(--gold)'} onMouseLeave={e => e.target.style.color = 'var(--text-dim')}
+                  onMouseEnter={e => (e.target.style.color = 'var(--gold)')} onMouseLeave={e => (e.target.style.color = 'var(--text-dim')}
                 >{settings.email}</a></li>
               )}
               {settings?.location && <li><span style={{ color: 'var(--text-dim)', fontSize: '14px' }}>{settings.location}</span></li>}
@@ -70,8 +70,8 @@ export default function Footer() {
               {activeSocials.map(([key, url]) => (
                 <a key={key} href={url} target="_blank" rel="noopener noreferrer"
                   style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', transition: 'color 0.2s' }}
-                  onMouseEnter={e => e.target.style.color = 'var(--gold)'}
-                  onMouseLeave={e => e.target.style.color = 'var(--text-dim')}
+                  onMouseEnter={e => (e.target.style.color = 'var(--gold)')}
+                  onMouseLeave={e => (e.target.style.color = 'var(--text-dim)')}
                   data-cursor={key}
                 >{key}</a>
               ))}
