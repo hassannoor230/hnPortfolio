@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { useScrollReveal } from '../hooks/scroll'
@@ -84,8 +84,7 @@ export default function Works() {
                   </Link>
                   <div style={{ minWidth: 0 }}>
                     <Link to={`/projects/${project.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 2.5vw, 30px)', color: 'var(--text)', transition: 'color 0.2s', lineHeight: 1.2 }} onMouseEnter={e => e.target.style.color = 'var(--gold)'} onMouseLeave={e => e.target.style.color = 'var(--text)'}>{project.title}</h3>
-                    </h3>
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 2.5vw, 30px)', color: 'var(--text)', transition: 'color 0.2s', lineHeight: 1.2 }} onMouseEnter={e => e.target.style.color = 'var(--gold)'} onMouseLeave={e => e.target.style.color = 'var(--text)'}>{project.title}                    </h3>
                     <p style={{ color: 'var(--text-dim)', fontSize: '14px', marginTop: '6px', maxWidth: '560px', lineHeight: 1.6 }}>{project.description}</p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' }}>
                       {(project.technologies || []).slice(0, 4).map((t) => <Tag key={t}>{t}</Tag>)}
