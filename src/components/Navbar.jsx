@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
 const links = [
@@ -17,7 +17,7 @@ export default function Navbar() {
   const location = useLocation()
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -27,32 +27,32 @@ export default function Navbar() {
   }, [location.pathname])
 
   const bgStyle = {
-    backgroundColor: scrolled ? 'rgba(8, 8, 8, 0.85)' : 'transparent',
-    backdropFilter: scrolled ? 'blur(10px)' : 'none',
-    borderBottom: scrolled ? '1px solid var(--border)' : 'transparent',
+    backgroundColor: scrolled ? 'rgba(7, 12, 22, 0.72)' : 'rgba(7, 12, 22, 0.18)',
+    backdropFilter: scrolled ? 'blur(14px)' : 'blur(6px)',
+    borderBottom: scrolled ? '1px solid var(--line)' : '1px solid transparent',
   }
 
   return (
     <nav className="navbar" style={bgStyle}>
-      <div className="container navbar-inner" style={{ height: '4rem' }}>
-        <Link to="/" className="nav-logo display-strong" style={{ fontSize: '1.5rem' }}>
-          HN
+      <div className="container navbar-inner">
+        <Link to="/" className="nav-logo" aria-label="Home">
+          <span>HN</span>
         </Link>
 
         <div className="navbar-desktop">
-          <div className="flex-gap" style={{ gap: '2rem' }}>
-            {links.map(link => (
-              <Link
+          <div className="nav-panel">
+            {links.map((link) => (
+              <NavLink
                 key={link.to}
                 to={link.to}
-                className="nav-link label"
-                style={{ color: 'var(--text-dim)', lineHeight: 1 }}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
               >
                 {link.label}
-              </Link>
+              </NavLink>
             ))}
           </div>
-          <Link to="/contact" className="btn btn--primary">
+
+          <Link to="/contact" className="btn btn--primary nav-cta">
             Let&apos;s Talk
           </Link>
         </div>
@@ -70,25 +70,25 @@ export default function Navbar() {
         {open && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'calc(100vh - 4rem)' }}
+            animate={{ opacity: 1, height: 'calc(100vh - 72px)' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
             className="navbar-mobile"
           >
             <div className="navbar-mobile-inner">
               {links.map((link, i) => (
                 <motion.div
                   key={link.to}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 + 0.1 }}
+                  transition={{ delay: i * 0.06 + 0.08 }}
                 >
-                  <Link
+                  <NavLink
                     to={link.to}
-                    className="nav-mobile-link display-strong"
+                    className={({ isActive }) => `nav-mobile-link ${isActive ? 'active' : ''}`}
                   >
                     {link.label}
-                  </Link>
+                  </NavLink>
                 </motion.div>
               ))}
             </div>

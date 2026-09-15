@@ -206,13 +206,24 @@ section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
+  height: 82px;
+  gap: 18px;
 }
 
 .navbar-desktop {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 18px;
+}
+
+.nav-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 999px;
 }
 
 .navbar-mobile-btn {
@@ -224,30 +235,53 @@ section {
 
 .nav-link,
 .nav-mobile-link {
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-soft);
-  transition: color 0.25s ease;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
 
 .nav-link:hover,
-.nav-mobile-link:hover {
+.nav-mobile-link:hover,
+.nav-link.active,
+.nav-mobile-link.active {
   color: var(--gold-300);
+  background: rgba(201, 168, 106, 0.08);
 }
 
 .nav-logo {
   position: relative;
   z-index: 2;
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
   color: var(--cream-50);
   font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.nav-cta {
+  min-height: 44px;
+  padding-left: 18px;
+  padding-right: 18px;
 }
 
 .navbar-mobile {
-  background: rgba(7, 20, 38, 0.96);
+  background: rgba(7, 20, 38, 0.97);
   backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--line);
 }
@@ -264,11 +298,12 @@ section {
 }
 
 .nav-mobile-link {
-  font-size: 2.4rem;
+  font-size: 2.1rem;
   letter-spacing: -0.06em;
   font-family: var(--font-display);
   line-height: 1;
   color: var(--cream-50);
+  padding: 8px 12px;
 }
 
 @media (max-width: 768px) {
