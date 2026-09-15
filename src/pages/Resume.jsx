@@ -1,16 +1,9 @@
-import { useEffect, useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { useSettings } from '../contexts/SettingsContext'
-import { Container, GoldLine, SectionLabel, SectionTitle, EmptyState } from '../components/UI'
 import api from '../lib/api'
 import SEO from '../components/SEO'
-import { Download, FileText } from 'lucide-react'
-
-function FadeIn({ children, delay = 0 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  return <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay }}>{children}</motion.div>
-}
+import { GoldLine, SectionLabel, FadeIn } from '../components/SectionHeading'
+import { Download, FileText, Calendar } from 'lucide-react'
 
 export default function Resume() {
   const { settings } = useSettings()
@@ -22,68 +15,101 @@ export default function Resume() {
     const load = async () => {
       try {
         const res = await api.get('/resume')
-        if (active) setResume(res.data.data || null)
-      } catch {} finally { if (active) setLoading(false) }
+        if (active) {
+          const data = res.data?.data
+          if (data) setResume(data)
+        }
+      } catch { if (active) setResume(null) }
+      finally { if (active) setLoading(false) }
     }
     load()
     return () => { active = false }
   }, [])
 
-  const handleDownload = () => {
-    if (resume?.fileUrl) {
+  useEffect(() => {
+    if (resume && resume._id) {
       api.post(`/resume/${resume._id}/download`).catch(() => {})
-      window.open(resume.fileUrl, '_blank')
     }
+  }, [resume])
+
+  if (loading) {
+    return (
+      <>
+        <SEO title="Resume | Hassan Noor" description="Professional resume" />
+        <div className="container" style={{ paddingTop: '6rem' }}>Loading...</div>
+      </>
+    )
   }
 
   return (
-    <section id="resume" style={{ padding: '160px 0', background: 'var(--bg-2)', position: 'relative' }}>
-      <SEO title="Resume — Hassan Noor" />
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
-      <Container>
-        <FadeIn>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-            <GoldLine />
-            <SectionLabel>Curriculum Vitae</SectionLabel>
-          </div>
-          <SectionTitle>Resume</SectionTitle>
-        </FadeIn>
+    <>
+      <SEO title="Resume | Hassan Noor" description="Professional resume and experience" />
 
-        {loading ? (
-          <div style={{ marginTop: '80px', height: '400px', background: 'var(--surface)', animation: 'shimmer 1.5s infinite' }} />
-        ) : !resume ? (
-          <div style={{ marginTop: '80px' }}>
-            <EmptyState title="Resume not available" description="Resume will be uploaded from the admin panel." />
-          </div>
-        ) : (
-          <FadeIn delay={0.2}>
-            <div style={{ marginTop: '60px', background: 'var(--surface)', border: '1px solid var(--border)', padding: '48px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '24px' }}>
-              <FileText size={48} color="var(--gold)" />
-              <div>
-                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', color: 'var(--text)', marginBottom: '8px' }}>{resume.title || 'Resume'}</h3>
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '13px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>
-                  {resume.fileName && `${resume.fileName} • ${(resume.fileSize / 1024).toFixed(0)} KB`}
-                </p>
-              </div>
-              <motion.button
-                onClick={handleDownload}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '10px',
-                  background: 'var(--gold)', border: 'none', color: 'var(--bg)',
-                  padding: '16px 48px', fontFamily: 'var(--font-body)', fontSize: '12px',
-                  letterSpacing: '3px', textTransform: 'uppercase', fontWeight: 600, cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                data-cursor="Download CV"
-              >
-                <Download size={16} />Download Resume
-              </motion.button>
+      <section style={{ padding: '6rem 0' }}>
+        <div className="container" style={{ maxWidth: '800px' }}>
+          <FadeIn>
+            <div className="flex-between mb-6" style={{ gap: '1rem' }}>
+              <GoldLine />
+              <SectionLabel>Resume</SectionLabel>
             </div>
           </FadeIn>
-        )}
-      </Container>
-    </section>
+
+          <FadeIn delay={0.1}>
+            <h1 className="display-strong" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1rem' }}>
+              {settings?.siteName || 'Hassan Noor'}
+            </h1>
+            <p className="body text-dim" style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>
+              {settings?.headline || 'MERN Stack Developer'}
+            </p>
+          </FadeIn>
+
+          {resume && resume.fileUrl ? (
+            <FadeIn delay={0.2}>
+              <div className="resume-download" style={{ background: 'var(--surface)', border: '1px solid var(--border)', padding: '3rem', textAlign: 'center', marginBottom: '2rem' }}>
+                <div className="flex-center" style={{ gap: '1rem', marginBottom: '1.5rem', flexDirection: 'column' }}>
+                  <FileText size={48} color="var(--accent)" />
+                  <div>
+                    <h3 className="title-strong text-primary">{resume.title || 'Download Resume'}</h3>
+                  </div>
+                </div>
+                <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer" download>
+                  <button className="btn btn--primary">
+                    <Download size={16} /> Download Resume (PDF)
+                  </button>
+                </a>
+                <div className="caption text-dim" style={{ marginTop: '1rem' }}>
+                  You can also <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer" className="text-accent">view it online</a>.
+                </div>
+              </div>
+            </FadeIn>
+          ) : (
+            <FadeIn delay={0.2}>
+              <div className="caption text-muted" style={{ textAlign: 'center', padding: '3rem' }}>
+                Resume is not yet available. Please check back later or contact via email.
+              </div>
+            </FadeIn>
+          )}
+
+          <FadeIn delay={0.3}>
+            <div style={{ marginTop: '3rem', padding: '2rem 0', borderTop: '1px solid var(--border)' }}>
+              <div className="flex-between" style={{ gap: '1rem', flexWrap: 'wrap' }}>
+                {settings?.email && (
+                  <div className="flex-gap" style={{ gap: '0.5rem', alignItems: 'center' }}>
+                    <Calendar size={16} color="var(--accent)" />
+                    <span className="caption text-dim">{settings.email}</span>
+                  </div>
+                )}
+                {settings?.location && (
+                  <div className="flex-gap" style={{ gap: '0.5rem', alignItems: 'center' }}>
+                    <Calendar size={16} color="var(--accent)" />
+                    <span className="caption text-dim">{settings.location}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </>
   )
 }

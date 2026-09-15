@@ -1,133 +1,128 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
-import { Container, GoldLine, SectionLabel, Tag, LoadingSpinner } from '../components/UI'
+import { useRef } from 'react'
 import api from '../lib/api'
 import SEO from '../components/SEO'
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Calendar, Clock, Tag as TagIcon } from 'lucide-react'
+import { GoldLine, SectionLabel, FadeIn } from '../components/SectionHeading'
+import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 
-function FadeIn({ children, delay = 0 }) {
+function FadeInUp({ children, delay = 0 }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  return <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay }}>{children}</motion.div>
+  const inView = useInView(ref, { once: true, margin: '-50px' })
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function renderContent(content) {
+  if (!content) return null
+  const lines = content.split('\n').filter(l => l.trim())
+  return lines.map((line, i) => {
+    if (line.startsWith('# ')) return <h1 key={i} className="title-strong mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>{line.slice(2)}</h1>
+    if (line.startsWith('## ')) return <h2 key={i} className="title-strong mb-3" style={{ fontSize: '1.75rem', marginTop: '2rem' }}>{line.slice(3)}</h2>
+    if (line.startsWith('### ')) return <h3 key={i} className="title-strong mb-2" style={{ fontSize: '1.25rem', marginTop: '1.5rem' }}>{line.slice(4)}</h3>
+    if (line.startsWith('> ')) return <blockquote key={i} className="body text-dim mb-4" style={{ borderLeft: '2px solid var(--accent)', paddingLeft: '1rem', fontStyle: 'italic' }}>{line.slice(2)}</blockquote>
+    if (line.startsWith('```')) return null
+    if (line.trim()) return <p key={i} className="body text-dim mb-4" style={{ lineHeight: 1.8 }}>{line}</p>
+    return <br key={i} />
+  })
 }
 
 export default function BlogPost() {
   const { slug } = useParams()
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [recentPosts, setRecentPosts] = useState([])
+  const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
     let active = true
     const load = async () => {
       try {
         const res = await api.get(`/blog/${slug}`)
-        if (active) {
-          setPost(res.data.data || null)
-          if (res.data.data) {
-            api.post(`/blog/${slug}/views`).catch(() => {})
-          }
-        }
-      } catch {} finally {
-        if (active) setLoading(false)
-      }
+        if (active) setPost(res.data.data)
+        if (active) api.post(`/blog/${slug}/views`).catch(() => {})
+      } catch {
+        if (active) setNotFound(true)
+      } finally { if (active) setLoading(false) }
     }
     load()
     return () => { active = false }
   }, [slug])
 
-  useEffect(() => {
-    let active = true
-    const loadRecent = async () => {
-      try {
-        const res = await api.get('/blog?limit=4')
-        if (active) setRecentPosts(res.data.data || [])
-      } catch {}
-    }
-    loadRecent()
-    return () => { active = false }
-  }, [])
-
   if (loading) {
-    return (
-      <section style={{ padding: '160px 0', background: 'var(--bg)' }}>
-        <Container><LoadingSpinner /></Container>
-      </section>
-    )
+    return <div className="container" style={{ paddingTop: '6rem' }}>Loading...</div>
   }
 
-  if (!post) {
+  if (notFound || !post) {
     return (
-      <section style={{ padding: '160px 0', background: 'var(--bg)' }}>
-        <SEO title="Post Not Found" noindex />
-        <Container>
-          <div style={{ textAlign: 'center', padding: '80px' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', color: 'var(--text)', marginBottom: '16px' }}>Post Not Found</h2>
-            <Link to="/blog" style={{ color: 'var(--gold)', textDecoration: 'none', fontFamily: 'var(--font-body)', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase' }}>← Back to Blog</Link>
-          </div>
-        </Container>
-      </section>
+      <div className="container" style={{ paddingTop: '6rem', textAlign: 'center' }}>
+        <h1 className="display-strong">Post not found</h1>
+        <Link to="/blog" className="mt-3 caption text-accent">← Back to Blog</Link>
+      </div>
     )
   }
 
   return (
-    <section style={{ padding: '160px 0', background: 'var(--bg)' }}>
-      <SEO title={`${post.title} — Hassan Noor`} description={post.excerpt || post.metaDescription} />
-      <Container>
-        <FadeIn>
-          <Link to="/blog" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text-dim)', textDecoration: 'none', fontFamily: 'var(--font-body)', fontSize: '12px', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '40px' }} data-cursor="Back"><ArrowLeft size={16} />Back to Blog</Link>
-        </FadeIn>
+    <>
+      <SEO title={post.title} description={post.excerpt || post.metaDescription} />
 
-        <FadeIn delay={0.1}>
-          <article style={{ maxWidth: '720px', margin: '0 auto' }}>
-            {post.coverImage && (
-              <div style={{ aspectRatio: '21/9', overflow: 'hidden', border: '1px solid var(--border)', marginBottom: '48px' }}>
-                <img src={post.coverImage} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-              </div>
-            )}
+      <section style={{ padding: '6rem 0' }}>
+        <div className="container" style={{ maxWidth: '720px' }}>
+          <FadeIn>
+            <Link to="/blog" className="flex-gap caption text-dim hover:text-accent" style={{ gap: '0.5rem', marginBottom: '3rem' }}>
+              <ArrowLeft size={14} /> Back to Blog
+            </Link>
+          </FadeIn>
 
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 6vw, 56px)', fontWeight: 600, color: 'var(--text)', lineHeight: 1.05, letterSpacing: '-1px', marginBottom: '24px' }}>{post.title}</h1>
-
-            <div style={{ display: 'flex', gap: '24px', alignItems: 'center', marginBottom: '32px', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={14} />{new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-              <span>—</span>
-              <span>{Math.max(1, Math.ceil((post.content || '').split(/\s+/).length / 200))} min read</span>
-            </div>
-
-            {post.category && <Tag style={{ marginBottom: '24px' }}>{post.category}</Tag>}
-
-            <div style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 300, lineHeight: 1.8, color: 'var(--text-dim)', marginBottom: '48px', whiteSpace: 'pre-wrap' }}>
-              {post.content}
-            </div>
-
-            {post.tags && post.tags.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '48px', paddingBottom: '24px', borderBottom: '1px solid var(--border)' }}>
-                {post.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
-              </div>
-            )}
-          </article>
-        </FadeIn>
-
-        {recentPosts.length > 0 && (
-          <FadeIn delay={0.3}>
-            <div style={{ maxWidth: '720px', margin: '0 auto', marginTop: '60px', paddingTop: '40px', borderTop: '1px solid var(--border)' }}>
-              <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '24px' }}>More Articles</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                {recentPosts.slice(0, 4).filter(p => p.slug !== post.slug).map(p => (
-                  <Link key={p._id} to={`/blog/${p.slug}`} style={{ display: 'flex', gap: '16px', textDecoration: 'none', color: 'inherit' }}>
-                    {p.coverImage ? <img src={p.coverImage} alt={p.title} style={{ width: '60px', height: '60px', objectFit: 'cover', border: '1px solid var(--border)' }} loading="lazy" /> : <div style={{ width: '60px', height: '60px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '10px' }}>No img</div>}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', color: 'var(--text)', lineHeight: 1.3, marginBottom: '4px' }}>{p.title}</h4>
-                      <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-dim)' }}>{new Date(p.publishedAt || p.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+          <FadeIn delay={0.1}>
+            <div className="flex-between mb-4" style={{ gap: '1rem' }}>
+              <GoldLine />
+              <SectionLabel>{post.category || 'General'}</SectionLabel>
             </div>
           </FadeIn>
-        )}
-      </Container>
-    </section>
+
+          <FadeIn delay={0.2}>
+            <h1 className="display-strong" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '1rem' }}>
+              {post.title}
+            </h1>
+          </FadeIn>
+
+          <FadeIn delay={0.3}>
+            <div className="flex-gap" style={{ gap: '1.5rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
+              <div className="flex-gap" style={{ gap: '0.4rem', alignItems: 'center' }}>
+                <Calendar size={12} />
+                <span className="caption">{new Date(post.publishedAt || post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              </div>
+              {post.readingTime && (
+                <div className="flex-gap" style={{ gap: '0.4rem', alignItems: 'center' }}>
+                  <Clock size={12} />
+                  <span className="caption">{post.readingTime} min read</span>
+                </div>
+              )}
+            </div>
+          </FadeIn>
+
+          {post.coverImage && (
+            <FadeIn delay={0.4}>
+              <img src={post.coverImage} alt={post.title} style={{ width: '100%', height: 'auto', marginBottom: '3rem' }} loading="eager" />
+            </FadeIn>
+          )}
+
+          <FadeIn delay={0.5}>
+            <div className="blog-content">
+              {renderContent(post.content)}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </>
   )
 }

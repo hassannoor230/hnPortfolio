@@ -1,30 +1,31 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useSettings } from '../contexts/SettingsContext'
-import { useScrollReveal } from '../hooks/scroll'
-import { Container, SectionLabel, SectionTitle, GoldLine, Tag, StatNumber } from '../components/UI'
 import api from '../lib/api'
-import { useState } from 'react'
+import SEO from '../components/SEO'
+import { GoldLine, SectionLabel, FadeIn } from '../components/SectionHeading'
+import Timeline from '../components/Timeline'
+import { ExternalLink, Github } from 'lucide-react'
 
 export default function About() {
   const { settings } = useSettings()
-  useScrollReveal()
   const [skills, setSkills] = useState([])
   const [experience, setExperience] = useState([])
-  const [stats, setStats] = useState({ totalProjects: 0, totalTestimonials: 0 })
+  const [education, setEducation] = useState([])
 
   useEffect(() => {
     let active = true
     const load = async () => {
       try {
-        const [skillsRes, expRes, testimonialsRes] = await Promise.all([
+        const [skillsRes, expRes, eduRes] = await Promise.all([
           api.get('/skills'),
           api.get('/experience'),
-          api.get('/testimonials'),
+          api.get('/education'),
         ])
         if (active) {
           setSkills(skillsRes.data.data || [])
-          setExperience(expRes.data.data || [])
-          setStats({ totalProjects: 0, totalTestimonials: (testimonialsRes.data.data || []).length })
+          setExperience(expRes.data || [])
+          setEducation(eduRes.data || [])
         }
       } catch {}
     }
@@ -32,103 +33,120 @@ export default function About() {
     return () => { active = false }
   }, [])
 
-  const grouped = skills.reduce((acc, s) => {
-    if (!s.visible) return acc
-    if (!acc[s.category]) acc[s.category] = []
-    acc[s.category].push(s)
-    return acc
-  }, {})
+  const name = settings?.siteName || 'Hassan Noor'
+  const bio = settings?.bio || 'I build high-performance, scalable web applications with a focus on clean design and user experience.'
 
   return (
-    <section id="about" style={{ padding: '160px 0 120px', background: 'var(--bg-2)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, var(--gold), transparent)' }} />
+    <>
+      <SEO title="About | Hassan Noor" description="About Hassan Noor - MERN Stack Developer" />
 
-      <Container>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '100px', alignItems: 'start' }}>
-          <div className="reveal-left">
-            <div style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden', border: '1px solid var(--border)' }}>
-              <img
-                src={settings?.profileImage || '/Me.png'}
-                alt={settings?.siteName || 'Hassan Noor'}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                loading="lazy"
-              />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,8,8,0.7), transparent 40%)' }} />
-              <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px' }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', color: 'var(--text)', marginBottom: '4px' }}>{settings?.siteName || 'Hassan Noor'}</div>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)' }}>{settings?.headline || 'MERN Stack Developer'}</div>
+      <section style={{ padding: '6rem 0' }}>
+        <div className="container">
+          {/* Header */}
+          <FadeIn>
+            <div className="flex-between mb-6" style={{ gap: '1rem' }}>
+              <GoldLine />
+              <SectionLabel>About</SectionLabel>
+            </div>
+            <h1 className="display-strong" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1rem' }}>
+              {name}
+            </h1>
+          </FadeIn>
+
+          {/* Editorial Layout */}
+          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '4rem', marginTop: '3rem' }}>
+            {/* Large Statement */}
+            <FadeIn delay={0.1}>
+              <div>
+                <p className="display" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', lineHeight: 1.2, color: 'var(--text-dim)', marginBottom: '1.5rem' }}>
+                  {bio}
+                </p>
+
+                {settings?.socials && (
+                  <div className="flex-gap" style={{ gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+                    {settings.socials.github && (
+                      <a href={settings.socials.github} target="_blank" rel="noopener noreferrer" className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="GitHub">
+                        <Github size={16} /> GitHub
+                      </a>
+                    )}
+                    {settings.socials.linkedin && (
+                      <a href={settings.socials.linkedin} target="_blank" rel="noopener noreferrer" className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="LinkedIn">
+                        <ExternalLink size={16} /> LinkedIn
+                      </a>
+                    )}
+                    {settings.email && (
+                      <a href={`mailto:${settings.email}`} className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="Email">
+                        <ExternalLink size={16} /> {settings.email}
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
+            </FadeIn>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '24px' }}>
-              <StatNumber value="5+" label="Years" />
-              <StatNumber value={stats.totalTestimonials} label="Reviews" />
-              <StatNumber value="30+" label="Clients" />
-            </div>
+            {/* Experience */}
+            <FadeIn delay={0.2}>
+              <div>
+                <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Experience</h2>
+                <Timeline items={experience} />
+              </div>
+            </FadeIn>
           </div>
 
-          <div>
-            <div className="reveal-up" style={{ marginBottom: '24px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-                <GoldLine />
-                <SectionLabel>Who I Am</SectionLabel>
+          {/* Skills Preview */}
+          <div style={{ marginTop: '4rem' }}>
+            <FadeIn delay={0.3}>
+              <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Skills & Expertise</h2>
+            </FadeIn>
+            <FadeIn delay={0.4}>
+              <div className="flex-gap" style={{ gap: '1rem', flexWrap: 'wrap' }}>
+                {skills.slice(0, 12).map((skill, i) => (
+                  <motion.span
+                    key={skill._id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.03 }}
+                    className="body"
+                    style={{
+                      color: 'var(--text)',
+                      padding: '0.4rem 0.85rem',
+                      border: '1px solid var(--border)',
+                      fontSize: '0.85rem',
+                    }}
+                  >
+                    {skill.name}
+                  </motion.span>
+                ))}
               </div>
-              <SectionTitle>Building digital<br /><span style={{ fontWeight: 300, fontStyle: 'italic', color: 'transparent', WebkitTextStroke: '1px rgba(201,169,110,0.6)' }}>experiences.</span></SectionTitle>
-            </div>
+            </FadeIn>
+          </div>
 
-            <div className="reveal-up" style={{ marginBottom: '48px' }}>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 300, color: 'var(--text-dim)', lineHeight: 1.9, marginBottom: '20px' }}>
-                {settings?.bio || 'I am a professional MERN Stack Developer dedicated to building high-performance, scalable, and conversion-focused web applications.'}
-              </p>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: '16px', fontWeight: 300, color: 'var(--text-dim)', lineHeight: 1.9 }}>
-                My philosophy is simple: every pixel matters. I blend technical precision with creative vision to build products that resonate, scale, and convert.
-              </p>
-            </div>
-
-            <div className="reveal-up" style={{ marginBottom: '56px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
-                <GoldLine />
-                <SectionLabel>What I Build</SectionLabel>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                {[
-                  'Full-Stack MERN Applications',
-                  'Custom Admin Dashboards',
-                  'E-Commerce & Booking Systems',
-                  'REST API Development',
-                  'Premium Landing Pages',
-                  'WordPress & Headless CMS',
-                ].map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 0', borderBottom: '1px solid var(--border)' }}>
-                    <span style={{ width: '6px', height: '6px', background: 'var(--gold)', borderRadius: '50%' }} />
-                    <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-dim)' }}>{item}</span>
-                  </div>
+          {/* Education */}
+          {education.length > 0 && (
+            <div style={{ marginTop: '4rem' }}>
+              <FadeIn delay={0.5}>
+                <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Education</h2>
+              </FadeIn>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {education.map((edu) => (
+                  <FadeIn key={edu._id} delay={0.6}>
+                    <div>
+                      <div className="flex-between" style={{ gap: '1rem', flexWrap: 'wrap' }}>
+                        <div>
+                          <h3 className="title-strong" style={{ fontSize: '1.1rem' }}>{edu.degree}</h3>
+                          <div className="caption text-dim">{edu.institute}</div>
+                        </div>
+                        <div className="caption text-dim">{edu.year}</div>
+                      </div>
+                    </div>
+                  </FadeIn>
                 ))}
               </div>
             </div>
-
-            <div className="reveal-up">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
-                <GoldLine />
-                <SectionLabel>Technologies</SectionLabel>
-              </div>
-              {Object.entries(grouped).map(([category, items]) => (
-                <div key={category} style={{ marginBottom: '24px' }}>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '10px' }}>{category}</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                    {items.map((skill) => (
-                      <Tag key={skill._id}>{skill.name}</Tag>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {Object.keys(grouped).length === 0 && (
-                <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Skills will be updated from the admin panel.</p>
-              )}
-            </div>
-          </div>
+          )}
         </div>
-      </Container>
-    </section>
+      </section>
+    </>
   )
 }
