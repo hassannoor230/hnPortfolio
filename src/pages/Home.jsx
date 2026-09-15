@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Quote, Sparkles, Layers3, Gauge, Palette, ChevronRight } from 'lucide-react'
+import { ArrowRight, Quote, ChevronRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import api from '../lib/api'

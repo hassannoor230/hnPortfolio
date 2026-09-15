@@ -1,9 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useSettings } from '../contexts/SettingsContext'
-import { useScrollReveal, SectionLabel, GoldLine, FadeIn } from '../components/SectionHeading'
-import Button from '../components/Button'
-import ProjectCard from '../components/ProjectCard'
 import api from '../lib/api'
 import SEO from '../components/SEO'
 import { ArrowRight } from 'lucide-react'
@@ -22,65 +19,86 @@ export default function Works() {
       try {
         const res = await api.get('/projects?limit=50')
         if (activeFlag) setProjects(res.data.data || [])
-      } catch {} finally { if (activeFlag) setLoading(false) }
+      } catch {
+        if (activeFlag) setProjects([])
+      } finally {
+        if (activeFlag) setLoading(false)
+      }
     }
     load()
     return () => { activeFlag = false }
   }, [])
 
-  const filtered = active === 'All' ? projects : projects.filter(p => p.category === active)
+  const filtered = active === 'All' ? projects : projects.filter((p) => p.category === active)
 
   return (
     <>
-      <SEO title="Work | Hassan Noor" description={settings?.seo?.description || "Portfolio of Hassan Noor, MERN Stack Developer."} />
+      <SEO title="Work | Hassan Noor" description={settings?.seo?.description || 'Portfolio of Hassan Noor, MERN Stack Developer.'} />
 
-      <section style={{ padding: '6rem 0' }}>
+      <section className="page-shell">
         <div className="container">
-          <FadeIn>
-            <div className="flex-between mb-6" style={{ gap: '1rem' }}>
-              <GoldLine />
-              <SectionLabel>Selected Work</SectionLabel>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.1}>
-            <h1 className="display-strong" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', lineHeight: 1.05, marginBottom: '1rem' }}>
-              Selected Projects
-            </h1>
-            <p className="body text-dim" style={{ maxWidth: '600px', marginBottom: '3rem', fontSize: '1.1rem' }}>
-              A curated selection of projects spanning full-stack development, performance optimization, and user experience.
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <span className="section-tag">Selected work</span>
+            <h1 className="page-title">Selected Projects</h1>
+            <p className="page-copy">
+              A curated selection of projects spanning full-stack engineering, performance optimization, and thoughtful product design.
             </p>
-          </FadeIn>
+          </motion.div>
 
-          {/* Filters */}
-          <div className="flex-gap" style={{ gap: '1.5rem', marginBottom: '3rem', flexWrap: 'wrap', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
-            {filters.map(filter => (
+          <div className="filter-row">
+            {filters.map((filter) => (
               <button
                 key={filter}
+                type="button"
+                className={`filter-btn ${active === filter ? 'active' : ''}`}
                 onClick={() => setActive(filter)}
-                className="label"
-                style={{
-                  color: active === filter ? 'var(--accent)' : 'var(--text-dim)',
-                  borderBottom: active === filter ? '1px solid var(--accent)' : 'transparent',
-                  padding: '0.5rem 0',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
               >
                 {filter}
               </button>
             ))}
           </div>
 
-          {/* Projects */}
           {loading ? (
-            <div className="caption text-muted">Loading projects...</div>
+            <div className="empty-state">Loading projects...</div>
           ) : filtered.length === 0 ? (
-            <div className="caption text-muted">No projects found.</div>
+            <div className="empty-state">No projects found.</div>
           ) : (
-            <div>
-              {filtered.map((project, i) => (
-                <ProjectCard key={project._id} project={project} index={i} />
+            <div className="project-list-wrap">
+              {filtered.map((project, index) => (
+                <motion.article
+                  key={project._id}
+                  initial={{ opacity: 0, y: 18 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.55, delay: index * 0.05 }}
+                  className="portfolio-card"
+                >
+                  <div className="portfolio-media">
+                    {project.thumbnail ? (
+                      <img src={project.thumbnail} alt={project.title} loading="lazy" />
+                    ) : (
+                      <div className="project-placeholder">No preview available</div>
+                    )}
+                  </div>
+
+                  <div className="portfolio-content">
+                    <div className="project-meta">
+                      <span>{project.category || 'Product Experience'}</span>
+                      <span>{project.year || '2024'}</span>
+                    </div>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div className="project-tags">
+                      {(project.technologies || ['React', 'Node.js']).slice(0, 4).map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                    <div className="project-cta">
+                      View project
+                      <ArrowRight size={16} />
+                    </div>
+                  </div>
+                </motion.article>
               ))}
             </div>
           )}

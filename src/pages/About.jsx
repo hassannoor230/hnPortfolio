@@ -3,8 +3,6 @@ import { motion } from 'framer-motion'
 import { useSettings } from '../contexts/SettingsContext'
 import api from '../lib/api'
 import SEO from '../components/SEO'
-import { GoldLine, SectionLabel, FadeIn } from '../components/SectionHeading'
-import Timeline from '../components/Timeline'
 import { ExternalLink, Github } from 'lucide-react'
 
 export default function About() {
@@ -27,120 +25,114 @@ export default function About() {
           setExperience(expRes.data || [])
           setEducation(eduRes.data || [])
         }
-      } catch {}
+      } catch {
+        if (active) {
+          setSkills([])
+          setExperience([])
+          setEducation([])
+        }
+      }
     }
     load()
     return () => { active = false }
   }, [])
 
   const name = settings?.siteName || 'Hassan Noor'
-  const bio = settings?.bio || 'I build high-performance, scalable web applications with a focus on clean design and user experience.'
+  const bio = settings?.bio || 'I build high-performance digital experiences that feel premium, intentional, and effortless for users.'
 
   return (
     <>
       <SEO title="About | Hassan Noor" description="About Hassan Noor - MERN Stack Developer" />
 
-      <section style={{ padding: '6rem 0' }}>
+      <section className="page-shell">
         <div className="container">
-          {/* Header */}
-          <FadeIn>
-            <div className="flex-between mb-6" style={{ gap: '1rem' }}>
-              <GoldLine />
-              <SectionLabel>About</SectionLabel>
-            </div>
-            <h1 className="display-strong" style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', marginBottom: '1rem' }}>
-              {name}
-            </h1>
-          </FadeIn>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <span className="section-tag">About</span>
+            <h1 className="page-title">{name}</h1>
+          </motion.div>
 
-          {/* Editorial Layout */}
-          <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '4rem', marginTop: '3rem' }}>
-            {/* Large Statement */}
-            <FadeIn delay={0.1}>
-              <div>
-                <p className="display" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', lineHeight: 1.2, color: 'var(--text-dim)', marginBottom: '1.5rem' }}>
-                  {bio}
-                </p>
+          <div className="about-grid">
+            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.8 }} className="about-story">
+              <p>{bio}</p>
+              <p>
+                I work at the intersection of product thinking, polished frontend craft, and scalable MERN architecture — creating experiences that feel refined, clear, and conversion-first.
+              </p>
 
-                {settings?.socials && (
-                  <div className="flex-gap" style={{ gap: '1.5rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-                    {settings.socials.github && (
-                      <a href={settings.socials.github} target="_blank" rel="noopener noreferrer" className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="GitHub">
-                        <Github size={16} /> GitHub
-                      </a>
-                    )}
-                    {settings.socials.linkedin && (
-                      <a href={settings.socials.linkedin} target="_blank" rel="noopener noreferrer" className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="LinkedIn">
-                        <ExternalLink size={16} /> LinkedIn
-                      </a>
-                    )}
-                    {settings.email && (
-                      <a href={`mailto:${settings.email}`} className="flex-gap" style={{ gap: '0.5rem', color: 'var(--text-dim)', textDecoration: 'none' }} data-cursor="Email">
-                        <ExternalLink size={16} /> {settings.email}
-                      </a>
-                    )}
-                  </div>
+              {settings?.socials && (
+                <div className="social-row">
+                  {settings.socials.github && (
+                    <a href={settings.socials.github} target="_blank" rel="noopener noreferrer" data-cursor="GitHub">
+                      <Github size={16} /> GitHub
+                    </a>
+                  )}
+                  {settings.socials.linkedin && (
+                    <a href={settings.socials.linkedin} target="_blank" rel="noopener noreferrer" data-cursor="LinkedIn">
+                      <ExternalLink size={16} /> LinkedIn
+                    </a>
+                  )}
+                  {settings.email && (
+                    <a href={`mailto:${settings.email}`} data-cursor="Email">
+                      <ExternalLink size={16} /> {settings.email}
+                    </a>
+                  )}
+                </div>
+              )}
+            </motion.div>
+
+            <motion.aside initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16, duration: 0.8 }} className="info-panel">
+              <h3>Experience</h3>
+              <div className="timeline-list">
+                {experience.length === 0 ? (
+                  <p className="muted-text">Experience details will appear here.</p>
+                ) : (
+                  experience.map((item) => (
+                    <div key={item._id || item.title} className="timeline-item">
+                      <span>{item.period || item.year || 'Present'}</span>
+                      <div>
+                        <strong>{item.title || item.role}</strong>
+                        <p>{item.company || item.institute || 'Professional role'}</p>
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
-            </FadeIn>
-
-            {/* Experience */}
-            <FadeIn delay={0.2}>
-              <div>
-                <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Experience</h2>
-                <Timeline items={experience} />
-              </div>
-            </FadeIn>
+            </motion.aside>
           </div>
 
-          {/* Skills Preview */}
-          <div style={{ marginTop: '4rem' }}>
-            <FadeIn delay={0.3}>
-              <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Skills & Expertise</h2>
-            </FadeIn>
-            <FadeIn delay={0.4}>
-              <div className="flex-gap" style={{ gap: '1rem', flexWrap: 'wrap' }}>
-                {skills.slice(0, 12).map((skill, i) => (
+          <div className="skill-block">
+            <h2>Core capabilities</h2>
+            <div className="skills-grid">
+              {skills.length === 0 ? (
+                <span className="skill-pill">Skills coming soon</span>
+              ) : (
+                skills.slice(0, 12).map((skill, idx) => (
                   <motion.span
-                    key={skill._id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    key={skill._id || skill.name}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.03 }}
-                    className="body"
-                    style={{
-                      color: 'var(--text)',
-                      padding: '0.4rem 0.85rem',
-                      border: '1px solid var(--border)',
-                      fontSize: '0.85rem',
-                    }}
+                    transition={{ delay: idx * 0.03 }}
+                    className="skill-pill"
                   >
                     {skill.name}
                   </motion.span>
-                ))}
-              </div>
-            </FadeIn>
+                ))
+              )}
+            </div>
           </div>
 
-          {/* Education */}
           {education.length > 0 && (
-            <div style={{ marginTop: '4rem' }}>
-              <FadeIn delay={0.5}>
-                <h2 className="title-strong" style={{ marginBottom: '2rem', fontSize: '1.75rem' }}>Education</h2>
-              </FadeIn>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div className="education-block">
+              <h2>Education</h2>
+              <div className="education-list">
                 {education.map((edu) => (
-                  <FadeIn key={edu._id} delay={0.6}>
+                  <div key={edu._id || edu.degree} className="education-item">
                     <div>
-                      <div className="flex-between" style={{ gap: '1rem', flexWrap: 'wrap' }}>
-                        <div>
-                          <h3 className="title-strong" style={{ fontSize: '1.1rem' }}>{edu.degree}</h3>
-                          <div className="caption text-dim">{edu.institute}</div>
-                        </div>
-                        <div className="caption text-dim">{edu.year}</div>
-                      </div>
+                      <strong>{edu.degree}</strong>
+                      <p>{edu.institute}</p>
                     </div>
-                  </FadeIn>
+                    <span>{edu.year}</span>
+                  </div>
                 ))}
               </div>
             </div>
